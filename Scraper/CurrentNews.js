@@ -1,5 +1,5 @@
 const checkDateDifference = require('./DateDifference.js');
-
+const fs = require('fs');
 const axios = require('axios');
 
 let news;
@@ -42,6 +42,34 @@ let news;
 
   if (noticias) {
     news = [...noticias.reduce((m, t) => m.set(t.titulo, t), new Map()).values()];
-    console.log(JSON.stringify(news, null, 2));
+
+    let forPrint = news
+      .map((x, i) => {
+        return `
+    <div class="card">
+    <div class="title">
+    <h1>${i}</h1>
+    <p>Publicado em: ${new Date(x.publicadoEm).toLocaleString()}
+    </p>
+    </div>
+      <b>Categoria: ${x.secao.nome}</b><br>
+      <h2>${x.titulo}</h2>
+      <h4>${x.subTitulo}</h4>
+      <p>Endereço:</p>
+      <a class="link" href="${x.url}">${x.url}</a>
+    </div>
+    `;
+      })
+      .join('');
+
+    console.log(news);
+
+    fs.writeFile('./forPrint.html', forPrint, (err, data) => {
+      if (err) {
+        return console.log(err);
+      }
+    });
+
+    // console.log(JSON.stringify(news, null, 2));
   }
 })();
