@@ -2,6 +2,9 @@ const checkDateDifference = require('./DateDifference.js');
 const fs = require('fs');
 const axios = require('axios');
 
+const simpleGit = require('simple-git');
+const git = simpleGit('../', { binary: 'git' });
+
 let news;
 
 (async () => {
@@ -13,6 +16,7 @@ let news;
       pagina: page,
     });
     console.log(`Fetching results from page ${page}...`);
+
     const result = await axios(requestUrl + params.toString()).then((data) => {
       // console.log(data.data);
       return data.data[0];
@@ -36,9 +40,14 @@ let news;
     }
   }
 
-  const noticias = await makeRequest(0).catch((e) =>
-    console.error(`\nERROR: ${e.message}\n\nREQUEST_URL: ${requestUrl}\n`)
-  );
+  const noticias = await makeRequest(0).catch((e) => {
+    console.error(`\nERROR: ${e.message}\n\nREQUEST_URL: ${requestUrl}\n`);
+
+    fs.appendFileSync(
+      'log.txt',
+      `${new Date().toLocaleString()} - SERVER ERROR: Couldn't fetch origin\n`
+    );
+  });
 
   if (noticias) {
     news = [...noticias.reduce((m, t) => m.set(t.titulo, t), new Map()).values()];
@@ -62,13 +71,49 @@ let news;
       })
       .join('');
 
+    const header = `<!DOCTYPE html>
+      <html lang="en">
+      
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Noticias JORNAL OGLOBO - 24h</title>
+        <link rel="stylesheet" href="style.css">
+      </head>
+      
+      <body>`;
+
+    const closing = `</body>
+
+    </html>`;
+
     console.log(news);
 
-    fs.writeFile('./forPrint.html', forPrint, (err, data) => {
+    fs.writeFile('../index.html', [header, forPrint, closing].join(''), (err, data) => {
       if (err) {
         return console.log(err);
       }
+      fs.appendFileSync(
+        'log.txt',
+        `${new Date().toLocaleString()} - JOB OK: index.html file created\n`
+      );
     });
+
+    try {
+      await git.add('index.html');
+      await git.commit(`News Update - ${new Date().toLocaleString()}`);
+      await git.push();
+      fs.appendFileSync(
+        'log.txt',
+        `${new Date().toLocaleString()} - JOB OK: Git Operation sucessfull\n`
+      );
+    } catch (e) {
+      console.log('git operations failed');
+      fs.appendFileSync(
+        'log.txt',
+        `${new Date().toLocaleString()} - SERVER ERROR: GIT Operations Failed\n`
+      );
+    }
 
     // console.log(JSON.stringify(news, null, 2));
   }

@@ -1,0 +1,2 @@
+31/01/2021 14:04:25 - JOB OK: index.html file created
+31/01/2021 14:04:30 - JOB OK: Git Operation sucessfull

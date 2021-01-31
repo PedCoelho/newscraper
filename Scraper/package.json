@@ -4,7 +4,6 @@
   "description": "",
   "main": "CurrentNews.js",
   "scripts": {
-
     "start": "node CurrentNews.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
-    "fs": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "simple-git": "^2.31.0"
   }
 }
