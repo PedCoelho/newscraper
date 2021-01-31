@@ -5,7 +5,9 @@ const axios = require('axios');
 const simpleGit = require('simple-git');
 const git = simpleGit('../', { binary: 'git' });
 
-let news;
+const notifier = require('node-notifier');
+
+let uniqueNews;
 
 (async () => {
   const requestUrl =
@@ -50,44 +52,67 @@ let news;
   });
 
   if (noticias) {
-    news = [...noticias.reduce((m, t) => m.set(t.titulo, t), new Map()).values()];
+    uniqueNews = [...noticias.reduce((m, t) => m.set(t.titulo, t), new Map()).values()];
 
-    let forPrint = news
+    let forPrint = uniqueNews
       .map((x, i) => {
         return `
     <div class="card">
-    <div class="title">
-    <h1>${i}</h1>
-    <p>Publicado em: ${new Date(x.publicadoEm).toLocaleString()}
-    </p>
-    </div>
-      <b>Categoria: ${x.secao.nome}</b><br>
-      <h2>${x.titulo}</h2>
-      <h4>${x.subTitulo}</h4>
-      <p>Endereço:</p>
-      <a class="link" href="${x.url}">${x.url}</a>
+      <div class="title">
+        <h1>${i}</h1>
+        <p>Publicado em: ${new Date(x.publicadoEm).toLocaleString()}
+        </p>
+      </div>
+      <div class="main-section">
+        <div>
+          <img src="${x.imagens.length > 0 ? x.imagens[0].url : 'noimage-found.png'}">
+        </div>
+        <div>
+          <b>Categoria: ${x.secao.nome}</b><br>
+          <h2>${x.titulo}</h2>
+          <h4>${x.subTitulo}</h4>
+          <p>Endereço:</p>
+          <a class="link" href="${x.url}">${x.url}</a>
+        </div>
+      </div>
     </div>
     `;
       })
       .join('');
 
     const header = `<!DOCTYPE html>
-      <html lang="en">
-      
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Noticias JORNAL OGLOBO - 24h</title>
-        <link rel="stylesheet" href="style.css">
-      </head>
-      
-      <body>`;
+    <html lang="pt-BR">
+    
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Noticias JORNAL OGLOBO - 24h</title>
+      <link rel="stylesheet" href="style.css">
+    </head>
+    
+    <body>
+      <div class="image-hider"><img src="./icon.png"></div>
+      `;
 
-    const closing = `</body>
+    const closing = `<script>
+    document.querySelector('.image-hider').addEventListener('click', toggleImages)
 
-    </html>`;
+    function toggleImages() {
+      let images = document.querySelectorAll('.main-section div:first-child')
+      images.forEach((div) => {
+        div.toggleAttribute('hidden')
+        div.style.flex = '0 0 0 100%'
+      })
 
-    console.log(news);
+      let otherDiv = document.querySelectorAll('.main-section div:last-child')
+      otherDiv.forEach((div) => div.classList.toggle('full-flex'))
+    }
+  </script>
+</body>
+
+</html>`;
+
+    // console.log(nuniqueNews);
 
     fs.writeFile('../index.html', [header, forPrint, closing].join(''), (err, data) => {
       if (err) {
@@ -107,6 +132,14 @@ let news;
         'log.txt',
         `${new Date().toLocaleString()} - JOB OK: Git Operation sucessfull\n`
       );
+
+      // Object
+      notifier.notify({
+        title: 'Noticias OGLOBO - 24h',
+        message: 'Git Push Sucessful',
+        icon: './dist/24-globo_icon.png',
+        appID: 'WebScraper',
+      });
     } catch (e) {
       console.log('git operations failed');
       fs.appendFileSync(
@@ -114,7 +147,5 @@ let news;
         `${new Date().toLocaleString()} - SERVER ERROR: GIT Operations Failed\n`
       );
     }
-
-    // console.log(JSON.stringify(news, null, 2));
   }
 })();
