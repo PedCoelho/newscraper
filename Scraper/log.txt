@@ -32,3 +32,7 @@
 31/01/2021 18:00:04 - JOB OK: index.html file created
 31/01/2021 18:43:40 - JOB OK: index.html file created
 31/01/2021 18:43:45 - JOB OK: Git Operation sucessfull
+31/01/2021 18:52:31 - JOB OK: index.html file created
+31/01/2021 18:52:35 - JOB OK: Git Operation sucessfull
+31/01/2021 18:54:14 - JOB OK: index.html file created
+31/01/2021 18:54:18 - JOB OK: Git Operation sucessfull

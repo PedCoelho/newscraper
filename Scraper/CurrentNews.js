@@ -65,7 +65,7 @@ let uniqueNews;
       </div>
       <div class="main-section">
         <div>
-          <img src="${x.imagens.length > 0 ? x.imagens[0].url : 'noimage-found.png'}">
+          <img src="${x.imagens.length > 0 ? x.imagens[0].url : '\\noimage-found.png'}">
         </div>
         <div>
           <b>Categoria: ${x.secao.nome}</b><br>
@@ -88,6 +88,7 @@ let uniqueNews;
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Noticias JORNAL OGLOBO - 24h</title>
       <link rel="stylesheet" href="style.css">
+      <link rel="shortcut icon" href="favicon.ico" />
     </head>
     
     <body>
