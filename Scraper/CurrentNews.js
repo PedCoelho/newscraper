@@ -65,7 +65,7 @@ let uniqueNews;
       </div>
       <div class="main-section">
         <div>
-          <img src="${x.imagens.length > 0 ? x.imagens[0].url : '\\noimage-found.png'}">
+          <img src="${x.imagens.length > 0 ? x.imagens[0].url : 'noimage-found.png'}">
         </div>
         <div>
           <b>Categoria: ${x.secao.nome}</b><br>
