@@ -73,6 +73,7 @@ div.image-hider {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  user-select: none; /* Non-pr*/
 }
 div.image-hider img {
   max-width: 89%;
