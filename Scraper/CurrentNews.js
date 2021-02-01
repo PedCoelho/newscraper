@@ -9,9 +9,26 @@ const notifier = require('node-notifier');
 
 let uniqueNews;
 
-(async () => {
+(async function scrape(attempt, maxAttempts) {
   const requestUrl =
     'https://oglobo.globo.com/api/v1/ultimas-noticias/ece_frontpage/ece_frontpage/conteudo.json?';
+
+  //STOP RECURSION
+  if (attempt >= maxAttempts) {
+    fs.appendFileSync(
+      'log.txt',
+      `${new Date().toLocaleString()} - JOB CANCELLED: Max nº of attempts (${maxAttempts}) reached.\n`
+    );
+
+    notifier.notify({
+      title: 'Noticias OGLOBO - 24h',
+      message: 'JOB CANCELLED: Failed to reach API',
+      icon: './dist/24-globo_icon.png',
+      appID: 'WebScraper',
+    });
+
+    throw new Error('scrape(): max attempts reached');
+  }
 
   async function makeRequest(page) {
     const params = new URLSearchParams({
@@ -42,13 +59,21 @@ let uniqueNews;
     }
   }
 
-  const noticias = await makeRequest(0).catch((e) => {
+  var noticias = await makeRequest(0).catch(async (e) => {
     console.error(`\nERROR: ${e.message}\n\nREQUEST_URL: ${requestUrl}\n`);
 
     fs.appendFileSync(
       'log.txt',
-      `${new Date().toLocaleString()} - SERVER ERROR: Couldn't fetch origin\n`
+      `${new Date().toLocaleString()} - SERVER ERROR: Couldn't fetch origin. Retrying...\n`
     );
+    (async () => {
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      await delay(10000);
+      attempt = attempt + 1;
+
+      scrape(attempt, maxAttempts);
+    })();
   });
 
   if (noticias) {
@@ -134,7 +159,6 @@ let uniqueNews;
         `${new Date().toLocaleString()} - JOB OK: Git Operation sucessfull\n`
       );
 
-      // Object
       notifier.notify({
         title: 'Noticias OGLOBO - 24h',
         message: 'Git Push Sucessful',
@@ -149,4 +173,4 @@ let uniqueNews;
       );
     }
   }
-})();
+})(1, 5);
