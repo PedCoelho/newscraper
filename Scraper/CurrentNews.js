@@ -7,6 +7,9 @@ const git = simpleGit('../', { binary: 'git' });
 
 const notifier = require('node-notifier');
 
+const AWS = require('aws-sdk');
+AWS.config.loadFromPath('./config.json');
+
 let uniqueNews;
 
 (async function scrape(attempt, maxAttempts) {
@@ -138,39 +141,57 @@ let uniqueNews;
 
 </html>`;
 
-    // console.log(nuniqueNews);
+    // console.log(uniqueNews);
 
-    fs.writeFile('../index.html', [header, forPrint, closing].join(''), (err, data) => {
-      if (err) {
-        return console.log(err);
-      }
-      fs.appendFileSync(
-        'log.txt',
-        `${new Date().toLocaleString()} - JOB OK: index.html file created\n`
-      );
-    });
+    // Create unique bucket name
+    var bucketName = 'oglobo-scraper';
+    // Create name for uploaded object key
+    var keyName = 'index.html';
 
-    try {
-      await git.add('index.html');
-      await git.commit(`News Update - ${new Date().toLocaleString()}`);
-      await git.push();
-      fs.appendFileSync(
-        'log.txt',
-        `${new Date().toLocaleString()} - JOB OK: Git Operation sucessfull\n`
-      );
+    // Create params for putObject call
+    var objectParams = {
+      Bucket: bucketName,
+      Key: keyName,
+      Body: [header, forPrint, closing].join(''),
+    };
+    // Create object upload promise
+    var uploadPromise = new AWS.S3().putObject(objectParams).promise();
 
-      notifier.notify({
-        title: 'Noticias OGLOBO - 24h',
-        message: 'Git Push Sucessful',
-        icon: './dist/24-globo_icon.png',
-        appID: 'WebScraper',
-      });
-    } catch (e) {
-      console.log('git operations failed');
-      fs.appendFileSync(
-        'log.txt',
-        `${new Date().toLocaleString()} - SERVER ERROR: GIT Operations Failed\n`
-      );
-    }
+    uploadPromise
+      .then((data) => console.log('Successfully uploaded data to ' + bucketName + '/' + keyName))
+      .catch((err) => console.error(err, err.stack));
+
+    // fs.writeFile('../index.html', [header, forPrint, closing].join(''), (err, data) => {
+    //   if (err) {
+    //     return console.log(err);
+    //   }
+    //   fs.appendFileSync(
+    //     'log.txt',
+    //     `${new Date().toLocaleString()} - JOB OK: index.html file created\n`
+    //   );
+    // });
+
+    // try {
+    //   await git.add('index.html');
+    //   await git.commit(`News Update - ${new Date().toLocaleString()}`);
+    //   await git.push();
+    //   fs.appendFileSync(
+    //     'log.txt',
+    //     `${new Date().toLocaleString()} - JOB OK: Git Operation sucessfull\n`
+    //   );
+
+    //   notifier.notify({
+    //     title: 'Noticias OGLOBO - 24h',
+    //     message: 'Git Push Sucessful',
+    //     icon: './dist/24-globo_icon.png',
+    //     appID: 'WebScraper',
+    //   });
+    // } catch (e) {
+    //   console.log('git operations failed');
+    //   fs.appendFileSync(
+    //     'log.txt',
+    //     `${new Date().toLocaleString()} - SERVER ERROR: GIT Operations Failed\n`
+    //   );
+    // }
   }
 })(1, 5);
