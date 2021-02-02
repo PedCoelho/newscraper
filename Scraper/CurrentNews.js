@@ -18,17 +18,17 @@ let uniqueNews;
 
   //STOP RECURSION
   if (attempt >= maxAttempts) {
-    fs.appendFileSync(
-      'log.txt',
-      `${new Date().toLocaleString()} - JOB CANCELLED: Max nº of attempts (${maxAttempts}) reached.\n`
-    );
+    // fs.appendFileSync(
+    //   'log.txt',
+    //   `${new Date().toLocaleString()} - JOB CANCELLED: Max nº of attempts (${maxAttempts}) reached.\n`
+    // );
 
-    notifier.notify({
-      title: 'Noticias OGLOBO - 24h',
-      message: 'JOB CANCELLED: Failed to reach API',
-      icon: './dist/24-globo_icon.png',
-      appID: 'WebScraper',
-    });
+    // notifier.notify({
+    //   title: 'Noticias OGLOBO - 24h',
+    //   message: 'JOB CANCELLED: Failed to reach API',
+    //   icon: './dist/24-globo_icon.png',
+    //   appID: 'WebScraper',
+    // });
 
     throw new Error('scrape(): max attempts reached');
   }
@@ -65,10 +65,10 @@ let uniqueNews;
   var noticias = await makeRequest(0).catch(async (e) => {
     console.error(`\nERROR: ${e.message}\n\nREQUEST_URL: ${requestUrl}\n`);
 
-    fs.appendFileSync(
-      'log.txt',
-      `${new Date().toLocaleString()} - SERVER ERROR: Couldn't fetch origin. Retrying...\n`
-    );
+    // fs.appendFileSync(
+    //   'log.txt',
+    //   `${new Date().toLocaleString()} - SERVER ERROR: Couldn't fetch origin. Retrying...\n`
+    // );
     (async () => {
       const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -146,13 +146,13 @@ let uniqueNews;
     // Create unique bucket name
     var bucketName = 'oglobo-scraper';
     // Create name for uploaded object key
-    var keyName = 'index.html';
+    var keyName = 'latest.json';
 
     // Create params for putObject call
     var objectParams = {
       Bucket: bucketName,
       Key: keyName,
-      Body: [header, forPrint, closing].join(''),
+      Body: JSON.stringify(uniqueNews),
     };
     // Create object upload promise
     var uploadPromise = new AWS.S3().putObject(objectParams).promise();
