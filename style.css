@@ -38,6 +38,7 @@ div.card {
   margin: 2rem;
   border-radius: 10px;
   box-shadow: 2px 6px 20px 2px #3d4882;
+  transition: all 0.5s ease;
 }
 
 div.card .title {
