@@ -67,6 +67,8 @@ div.image-hider {
   max-height: 100%;
   width: 2rem;
   background-color: #a2d89c;
+  border-radius: 3px;
+
   display: flex;
   cursor: pointer;
   flex-direction: column;
