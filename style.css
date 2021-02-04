@@ -1,6 +1,8 @@
 body {
   background-color: #3a4964;
   overflow-wrap: anywhere;
+  overflow-x: hidden;
+  font-family: monospace;
 }
 
 div.main-section {
@@ -31,20 +33,22 @@ div.main-section div:last-child {
 }
 
 div.card {
-  font-family: monospace;
   color: whitesmoke;
   background-color: #4c6ca7;
   padding: 1.5rem;
   margin: 2rem;
   border-radius: 10px;
   box-shadow: 2px 6px 20px 2px #3d4882;
-  transition: all 0.5s ease;
 }
 
 div.card .title {
   display: flex;
   margin-bottom: 2rem;
   align-items: center;
+}
+
+div.card .title h3 {
+  display: inline-block;
 }
 
 div.card .title h1,
@@ -60,27 +64,100 @@ a.link {
 }
 
 div.image-hider {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  padding: 0.5rem;
-  background-color: #f1c5e9;
+  max-height: 100%;
+  width: 2rem;
+  background-color: #a2d89c;
   display: flex;
-  position: fixed;
-  bottom: 2rem;
-  right: 1.3rem;
   cursor: pointer;
-  box-shadow: 0px 2px 5px hotpink;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
   user-select: none; /* Non-pr*/
 }
+
+div.image-hider:hover {
+  background-color: #7ee772;
+}
+
+div.image-hider:active {
+  background-color: #5a9953;
+}
 div.image-hider img {
-  max-width: 89%;
+  max-width: 90%;
   height: auto;
   object-fit: contain;
   filter: invert(20%);
+}
+
+.highlight { 
+  background-color: rgb(231 95 134);
+  border: 1px solid white;
+  border-radius: 4px;
+  padding: 2px 5px;
+  transition: .2s ease all;
+  font-size: 1.1rem;
+}
+
+#messager{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  width: max-content;
+  max-width: 80vw;
+  display: none;
+  transform: translate(-50%,-50%);
+  color: white;
+}
+/* Searchbar */
+input[type="search"] {
+  padding: 6px;
+  font-size: 17px;
+  border: none;
+  border-radius: 3px 0 0 3px;
+
+}
+.icons {
+  position: fixed;
+  display: flex;
+  bottom: 0;
+  right: 0;
+  flex-shrink: 1;
+  overflow: hidden;
+  justify-content: flex-end;
+  padding: 2rem;
+}
+
+.icons button{
+  border-radius: 3px;
+  padding: 6px 10px;
+  margin-right: 5px;
+  background: #ddd !important;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+.search-container {
+  display: flex;
+  bottom: 0;
+  right: 0;
+  flex-shrink: 1;
+  overflow: hidden;
+  justify-content: flex-end;
+  padding: 1rem 2rem;
+}
+
+.search-container button {
+  padding: 6px 10px;
+  margin-right: 5px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.search-container button:hover {
+  background: #ccc;
 }
 
 @media only screen and (max-width: 900px) {
@@ -118,4 +195,14 @@ div.image-hider img {
   p {
     margin: 0 2rem 0 0;
   }
+
+
+  .search-container {
+    padding: 2rem 1rem 1rem 1rem;
+    justify-content: center;
+  }
+  .search-container *{
+    flex-grow: 1;
+  }
+  
 }
