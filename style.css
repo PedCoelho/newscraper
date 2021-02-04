@@ -3,6 +3,7 @@ body {
   overflow-wrap: anywhere;
   overflow-x: hidden;
   font-family: monospace;
+  transform: .2s ease all;
 }
 
 div.main-section {
