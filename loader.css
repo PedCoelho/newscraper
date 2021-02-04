@@ -1,8 +1,8 @@
 .lds-roller {
   /* display: inline-block; */
   position: fixed;
-  left: 50vw;
-  top: 50vh;
+  top: 38%;
+  left: 40%;
   transition: all 0.2s ease;
 }
 .lds-roller div {
