@@ -120,7 +120,7 @@ $('input[type=search]').on('search', search);
 function search() {
 
   let searchbar = $('input[type=search]')
-  // searchbar.focus()
+  searchbar.blur()
   // get the text from the box
   let curr_text = searchbar.val();
   // pass it to the function
