@@ -3,7 +3,11 @@ body {
   overflow-wrap: anywhere;
   overflow-x: hidden;
   font-family: monospace;
+}
+
+div{
   transform: .2s ease all;
+
 }
 
 div.main-section {
@@ -69,7 +73,6 @@ div.image-hider {
   width: 2rem;
   background-color: #a2d89c;
   border-radius: 3px;
-
   display: flex;
   cursor: pointer;
   flex-direction: column;
