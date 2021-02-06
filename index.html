@@ -169,28 +169,38 @@
   </script>
   <script>
     $('body').on('click', '.card', copyURL)
-    
-    tippy.setDefaultProps({
-      animation: 'scale-subtle',
-      duration: 150,
-      content: 'Link Copiado!',
-      hideOnClick: false,
-      touch:false,
-      onShow(instance) {
-        setTimeout(() => {
-          instance.hide();
-        }, 1000);
-      }
-    });
 
-    let init = tippy(document.body,{
-      trigger:'click',
-      content:'nada aqui',
-      showOnCreate:true,
-      followCursor:'true',
-    })
-    init.hide()
-    init.disable()
+    var tippyInstance
+    
+    window.addEventListener('DOMContentLoaded', tippyInstance = setupTippyInstance())
+    
+    function setupTippyInstance(){
+      console.log('tippy setup')
+      tippy.setDefaultProps({
+        animation: 'scale-subtle',
+        duration: 150,
+        content: 'Link Copiado!',
+        hideOnClick: false,
+        touch:false,
+        onShow(instance) {
+          setTimeout(() => {
+            instance.hide();
+            instance.disable();
+          }, 800);
+        }
+      });
+  
+      var init = tippy(document.body,{
+        trigger:'click',
+        showOnCreate:true,
+        followCursor:'true',
+      })
+  
+      init.hide()
+      init.disable()
+
+      return init
+    }
 
     function copyURL() {
 
@@ -204,19 +214,10 @@
       textArea.remove();
 
 
-      if (this._tippy) {
-        console.log('tippy already configured')
-
-      } else {
-        console.log('tip created')
-        let instance = tippy(this, {
-          trigger: 'click',
-          appendTo: document.body,
-          showOnCreate:true,
-          followCursor:'true',
-        })
-        instance.show()
-        }
+      if (!tippyInstance.state.isEnabled) {
+        tippyInstance.enable()
+        tippyInstance.show()
+      }
     }
   </script>
 
