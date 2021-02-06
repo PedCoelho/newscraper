@@ -5,26 +5,26 @@ body {
   font-family: monospace;
 }
 
-div{
-  transform: .2s ease all;
-
+div {
+  transform: 0.2s ease all;
 }
 
 div.main-section {
   display: flex;
+  justify-content: stretch;
   /* justify-content: space-between; */
 }
 
 div.main-section div:first-child {
-  flex: 0 0 30%;
+  flex: 0 0 15%;
   margin-right: 3rem;
+  display: flex;
 }
 
 div.main-section div:first-child img {
   max-width: 100%;
   min-width: 0px;
   object-fit: cover;
-  height: 20rem;
   border-radius: 10px;
   border: 1px solid whitesmoke;
 }
@@ -34,7 +34,7 @@ div.main-section div:first-child img {
 }
 
 div.main-section div:last-child {
-  flex: 0 0 60%;
+  flex: 1 0 50%;
 }
 
 div.card {
@@ -43,12 +43,23 @@ div.card {
   padding: 1.5rem;
   margin: 2rem;
   border-radius: 10px;
+  border: 1px solid transparent;
   box-shadow: 2px 6px 20px 2px #3d4882;
+  pointer-events: all;
+  cursor: pointer;
+  transition:background-color .1s ease ,border-color .1s ease;
 }
+
+div.card:hover{
+  border: 1px solid rgb(177, 177, 177);
+  background-color:#4065a8;
+}
+
+
 
 div.card .title {
   display: flex;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   align-items: center;
 }
 
@@ -62,7 +73,7 @@ p {
 }
 
 a.link {
-  font-size: 1.2rem;
+  font-size: 0.7rem;
   color: palegoldenrod;
   margin-bottom: 1.5rem;
   white-space: pre-wrap;
@@ -95,16 +106,16 @@ div.image-hider img {
   filter: invert(20%);
 }
 
-.highlight { 
+.highlight {
   background-color: rgb(231 95 134);
   border: 1px solid white;
   border-radius: 4px;
   padding: 2px 5px;
-  transition: .2s ease all;
+  transition: 0.2s ease all;
   font-size: 1.1rem;
 }
 
-#messager{
+#messager {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -112,7 +123,7 @@ div.image-hider img {
   width: max-content;
   max-width: 80vw;
   display: none;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   color: white;
 }
 /* Searchbar */
@@ -121,7 +132,6 @@ input[type="search"] {
   font-size: 17px;
   border: none;
   border-radius: 3px 0 0 3px;
-
 }
 .icons {
   position: fixed;
@@ -134,7 +144,7 @@ input[type="search"] {
   padding: 2rem;
 }
 
-.icons button{
+.icons button {
   border-radius: 3px;
   padding: 6px 10px;
   margin-right: 5px;
@@ -202,13 +212,11 @@ input[type="search"] {
     margin: 0 2rem 0 0;
   }
 
-
   .search-container {
     padding: 2rem 1rem 1rem 1rem;
     justify-content: center;
   }
-  .search-container *{
+  .search-container * {
     flex-grow: 1;
   }
-  
 }
