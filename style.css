@@ -1,3 +1,6 @@
+[hidden] { display: none !important; }
+
+
 body {
   background-color: #3a4964;
   overflow-wrap: anywhere;
@@ -16,9 +19,9 @@ div.main-section {
 }
 
 div.main-section div:first-child {
+  display: flex;
   flex: 0 0 15%;
   margin-right: 3rem;
-  display: flex;
 }
 
 div.main-section div:first-child img {
