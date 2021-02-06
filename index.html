@@ -169,19 +169,27 @@
   </script>
   <script>
     $('body').on('click', '.card', copyURL)
-
+    
     tippy.setDefaultProps({
       animation: 'scale-subtle',
       duration: 150,
-      trigger: 'manual',
       content: 'Link Copiado!',
-      hideOnClick:false,
+      hideOnClick: false,
       onShow(instance) {
         setTimeout(() => {
           instance.hide();
         }, 1000);
       }
     });
+
+    let init = tippy(document.body,{
+      trigger:'click',
+      content:'nada aqui',
+      showOnCreate:true,
+      followCursor:'true',
+    })
+    init.hide()
+    init.disable()
 
     function copyURL() {
 
@@ -196,15 +204,19 @@
 
 
       if (this._tippy) {
-        !this._tippy.state.isShown ? this._tippy.show() : console.log('tippy already showing')
+        console.log('tippy already configured')
 
       } else {
+        console.log('tip created')
         let instance = tippy(this, {
-          followCursor: true,
+          trigger: 'click',
           touch: 'hold',
+          appendTo: document.body,
+          showOnCreate:true,
+          followCursor:'true',
         })
         instance.show()
-      }
+        }
     }
   </script>
 
