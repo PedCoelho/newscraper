@@ -76,6 +76,14 @@
         document.body.appendChild(container)
 
       })
+      
+      window.data = data
+
+      if (sessionStorage.latestNews && data[0].titulo != sessionStorage.latestNews) {
+        window.scrollTo({top:0,behavior: 'smooth' })
+      } else if (sessionStorage.scrollTop != "undefined") {
+        window.scrollTo({top:sessionStorage.scrollTop});
+      }
 
     })()
   </script>
@@ -171,17 +179,17 @@
     $('body').on('click', '.card', copyURL)
 
     var tippyInstance
-    
+
     window.addEventListener('DOMContentLoaded', tippyInstance = setupTippyInstance())
-    
-    function setupTippyInstance(){
+
+    function setupTippyInstance() {
       console.log('tippy setup')
       tippy.setDefaultProps({
         animation: 'scale-subtle',
         duration: 150,
         content: 'Link Copiado!',
         hideOnClick: false,
-        touch:false,
+        touch: false,
         onShow(instance) {
           setTimeout(() => {
             instance.hide();
@@ -189,13 +197,13 @@
           }, 800);
         }
       });
-  
-      var init = tippy(document.body,{
-        trigger:'click',
-        showOnCreate:true,
-        followCursor:'true',
+
+      var init = tippy(document.body, {
+        trigger: 'click',
+        showOnCreate: true,
+        followCursor: 'true',
       })
-  
+
       init.hide()
       init.disable()
 
@@ -220,7 +228,19 @@
       }
     }
   </script>
+  <script>
+    $(window).on('unload', function () {
+      sessionStorage.scrollTop = $(this).scrollTop();
+      sessionStorage.latestNews = this.data[0].titulo
+    });
 
+    $(document).ready(function () {
+      if (sessionStorage.scrollTop != "undefined") {
+        $(window).scrollTop(sessionStorage.scrollTop, { behaviour: 'smooth' });
+      }
+    });
+
+  </script>
 </body>
 
 </html>
