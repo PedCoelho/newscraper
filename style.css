@@ -45,7 +45,6 @@ div.card {
   border-radius: 10px;
   border: 1px solid transparent;
   box-shadow: 2px 6px 20px 2px #3d4882;
-  pointer-events: all;
   cursor: pointer;
   transition:background-color .1s ease ,border-color .1s ease;
 }
@@ -219,4 +218,5 @@ input[type="search"] {
   .search-container * {
     flex-grow: 1;
   }
+
 }
