@@ -1,0 +1,10 @@
+Front-end:
+    ✔ Copiar: título da notícia, subtítulo e link (texto formatado)
+    ✔ Tornar o título clicável (quando clicasse nele, abriria a notícia)
+    ✔ Links abrem em nova aba
+    ✔ Diminuir ainda mais tamanho das imagens
+    ☐ Botão específico dentro do card para o comando de copiar?
+    ☐ Botão específico dentro do card para ir até a notíca
+
+Back-end:
+    ☐ Excluir logo as categorias listadas ali embaixo (esportes, viagem etc)
