@@ -20,7 +20,7 @@ div.main-section {
 
 div.main-section div:first-child {
   display: flex;
-  flex: 0 0 15%;
+  flex: 0 0 10%;
   margin-right: 3rem;
 }
 
@@ -69,15 +69,19 @@ div.card .title h3 {
   display: inline-block;
 }
 
+div.card h4{
+  font-size: 1rem;
+  font-weight: 300;
+  margin-top: 0.6rem;
+}
+
 div.card .title h1,
 p {
   margin: 0 2rem 0 0;
 }
 
 a.link {
-  font-size: 0.7rem;
   color: palegoldenrod;
-  margin-bottom: 1.5rem;
   white-space: pre-wrap;
 }
 

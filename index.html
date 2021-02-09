@@ -61,10 +61,8 @@
                             </div>
                             <div>
                               <b>Categoria: ${x.secao.nome}</b><br>
-                              <h2>${x.titulo}</h2>
+                              <h2><a class="link" target="_blank" href="${x.url}">${x.titulo}</a></h2>
                               <h4>${x.subTitulo}</h4>
-                              <p>Endereço:</p>
-                              <a class="link" href="${x.url}">${x.url}</a>
                             </div>
                           </div>
                         `
@@ -212,14 +210,21 @@
 
     function copyURL() {
 
-      let link = $(this).find('a').text()
-      let textArea = document.createElement("textarea");
+      const link = $(this).find('a').attr('href')
+      const title = $(this).find('h2').text()
+      const subtitle = $(this).find('h4').text()
 
-      textArea.value = link;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand("Copy");
-      textArea.remove();
+      const content = `<h3>${title}</h3><p>${subtitle}</p><a href="${link}">${link}</a>`
+
+      const textArea = document.createElement("textarea");
+
+      // textArea.value = content;
+      // document.body.appendChild(textArea);
+      // textArea.select();
+      // document.execCommand("Copy");
+      // textArea.remove();
+
+      copyToClip(content)
 
 
       if (!tippyInstance.state.isEnabled) {
@@ -227,6 +232,17 @@
         tippyInstance.show()
       }
     }
+
+    function copyToClip(str) {
+  function listener(e) {
+    e.clipboardData.setData("text/html", str);
+    e.clipboardData.setData("text/plain", str);
+    e.preventDefault();
+  }
+  document.addEventListener("copy", listener);
+  document.execCommand("copy");
+  document.removeEventListener("copy", listener);
+};
   </script>
   <script>
     $(window).on('unload', function () {
