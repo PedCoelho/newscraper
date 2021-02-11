@@ -1,5 +1,5 @@
 Front-end:
-    ✔ Copiar: título da notícia, subtítulo e link (texto formatado)
+    ✘ Copiar: título da notícia, subtítulo e link (texto formatado)
     ✔ Tornar o título clicável (quando clicasse nele, abriria a notícia)
     ✔ Links abrem em nova aba
     ✔ Diminuir ainda mais tamanho das imagens

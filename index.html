@@ -74,13 +74,13 @@
         document.body.appendChild(container)
 
       })
-      
+
       window.data = data
 
       if (sessionStorage.latestNews && data[0].titulo != sessionStorage.latestNews) {
-        window.scrollTo({top:0,behavior: 'smooth' })
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       } else if (sessionStorage.scrollTop != "undefined") {
-        window.scrollTo({top:sessionStorage.scrollTop});
+        window.scrollTo({ top: sessionStorage.scrollTop });
       }
 
     })()
@@ -211,20 +211,30 @@
     function copyURL() {
 
       const link = $(this).find('a').attr('href')
-      const title = $(this).find('h2').text()
-      const subtitle = $(this).find('h4').text()
+      // const title = $(this).find('h2').text()
+      // const subtitle = $(this).find('h4').text()
 
-      const content = `<h3>${title}</h3><p>${subtitle}</p><a href="${link}">${link}</a>`
+      // const content = `<a href="${link}">${link}</a>`
+      // copyToClip(content)
+
+    //   function copyToClip(str) {
+    //   function listener(e) {
+    //     e.clipboardData.setData("text/html", str);
+    //     e.clipboardData.setData("text/plain", str);
+    //     e.preventDefault();
+    //   }
+    //   document.addEventListener("copy", listener);
+    //   document.execCommand("copy");
+    //   document.removeEventListener("copy", listener);
+    // };
 
       const textArea = document.createElement("textarea");
+      textArea.value = link;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("Copy");
+      textArea.remove();
 
-      // textArea.value = content;
-      // document.body.appendChild(textArea);
-      // textArea.select();
-      // document.execCommand("Copy");
-      // textArea.remove();
-
-      copyToClip(content)
 
 
       if (!tippyInstance.state.isEnabled) {
@@ -233,16 +243,7 @@
       }
     }
 
-    function copyToClip(str) {
-  function listener(e) {
-    e.clipboardData.setData("text/html", str);
-    e.clipboardData.setData("text/plain", str);
-    e.preventDefault();
-  }
-  document.addEventListener("copy", listener);
-  document.execCommand("copy");
-  document.removeEventListener("copy", listener);
-};
+ 
   </script>
   <script>
     $(window).on('unload', function () {
