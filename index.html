@@ -44,12 +44,17 @@
   <script>
 
     (async () => {
-      const data = await fetch('https://oglobo-scraper.s3-sa-east-1.amazonaws.com/latest.json').then(x => {
+      const scraperData = await fetch('https://oglobo-scraper.s3-sa-east-1.amazonaws.com/latest.json').then(x => {
         document.querySelector('.lds-roller').toggleAttribute('hidden')
         return x.json()
       })
 
-      data.forEach((x, i) => {
+      console.log(`\n✅ Notícias Atuais: ${scraperData.newsCount}\n\n❌ Noticias Excluidas: ${scraperData.excludedCount}\n\n`)
+
+      window.data = scraperData.data
+      window.excluded = scraperData.excluded
+
+      scraperData.data.forEach((x, i) => {
 
         let content = `<div class="title">
                             <h1>${i}</h1>
@@ -74,8 +79,6 @@
         document.body.appendChild(container)
 
       })
-
-      window.data = data
 
       if (sessionStorage.latestNews && data[0].titulo != sessionStorage.latestNews) {
         window.scrollTo({ top: 0, behavior: 'smooth' })
