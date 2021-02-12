@@ -6,6 +6,7 @@ body {
   overflow-wrap: anywhere;
   overflow-x: hidden;
   font-family: monospace;
+  color: white;
 }
 
 div {
@@ -165,8 +166,22 @@ input[type="search"] {
   right: 0;
   flex-shrink: 1;
   overflow: hidden;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
   padding: 1rem 2rem;
+}
+
+.search-container > div{
+  display: flex;
+  justify-content: flex-end;
+  height: fit-content;
+white-space: pre-wrap;
+}
+
+.search-container > div > h2{
+  margin-bottom: unset;
+  font-size: 1.2rem;
+  line-height: 1.2rem;
 }
 
 .search-container button {
@@ -219,11 +234,25 @@ input[type="search"] {
   }
 
   .search-container {
-    padding: 2rem 1rem 1rem 1rem;
-    justify-content: center;
+    padding: 1rem;
+    align-items: flex-start;
+    justify-content: space-around;
+    flex-direction: column;
   }
   .search-container * {
-    flex-grow: 1;
+    width: 100%;
+  }
+
+  .search-container > div:last-child > input{
+  flex: 1 1 90%;
+  }
+  .search-container > div:last-child > button{
+  flex: 1 1 10%;
+  }
+
+  .search-container > div:first-child{
+    margin-bottom: 1rem;
+    font-size: 0.5rem;
   }
 
 }

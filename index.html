@@ -17,8 +17,13 @@
 
 <body>
   <div class="search-container">
-    <input id="searchbar" type="search" placeholder="Busca">
-    <button class="search-btn"><i class="fa fa-search"></i></button>
+    <div>
+      <h2></h2>
+    </div>
+    <div>
+      <input id="searchbar" type="search" placeholder="Busca">
+      <button class="search-btn"><i class="fa fa-search"></i></button>
+    </div>
   </div>
   <div class="icons">
     <button class="to-top"><i class="fa fa-arrow-up"></i></button>
@@ -54,10 +59,12 @@
       window.data = scraperData.data
       window.excluded = scraperData.excluded
 
+      $('.search-container h2').text(`✅ Notícias Atuais: ${scraperData.newsCount}\n\n❌ Noticias Excluidas: ${scraperData.excludedCount}`  )
+
       scraperData.data.forEach((x, i) => {
 
         let content = `<div class="title">
-                            <h1>${i}</h1>
+                            <h1>${i+1}</h1>
                             <p>Publicado em: ${new Date(x.publicadoEm).toLocaleString()}</p>
                             </div>
                           <div class="main-section">
