@@ -17,9 +17,14 @@
 
 <body>
   <div class="search-container">
-    <div>
-      <h2></h2>
+    <div class="newsCounter">
+      <h2 class="noticias"></h2>
+        <div class="categorias"></div>
+      <h2 class="excluidas"></h2>
+        <div class="categorias"></div>
+        
     </div>
+
     <div>
       <input id="searchbar" type="search" placeholder="Busca">
       <button class="search-btn"><i class="fa fa-search"></i></button>
@@ -59,7 +64,17 @@
       window.data = scraperData.data
       window.excluded = scraperData.excluded
 
-      $('.search-container h2').text(`✅ Notícias Atuais: ${scraperData.newsCount}\n\n❌ Noticias Excluidas: ${scraperData.excludedCount}`  )
+      const noticiasCounter = $('.search-container h2.noticias')
+      noticiasCounter.text(`✅ Notícias Atuais: ${scraperData.newsCount}`)
+      const excludedCounter = $('.search-container h2.excluidas')
+      excludedCounter.text(`❌ Noticias Excluidas: ${scraperData.excludedCount}`);
+      setupClick([noticiasCounter,excludedCounter])
+
+      function setupClick(titles){
+        titles.forEach( title => {
+          title.on('click',() => {title.next().toggleClass('expanded')})
+        })
+      }
 
       scraperData.data.forEach((x, i) => {
 
@@ -84,6 +99,30 @@
         container.innerHTML = content
 
         document.body.appendChild(container)
+
+      })
+      window.categorizadasExcluidas =  Object.entries(scraperData.categorized.exclusions)
+      window.categorizadas = Object.entries(scraperData.categorized.news)
+      
+      categorizadas.sort((a,b)=> a[1].length < b[1].length ? 1 : -1)
+      categorizadasExcluidas.sort((a,b)=> a[1].length < b[1].length ? 1 : -1)
+
+      categorizadas.forEach(([cat,newsArray]) => {
+        console.log(cat + ' ' + newsArray.length)
+
+        let button = document.createElement('template')
+        let content = `<button>${cat} - ${newsArray.length}</button>`
+        button.innerHTML = content
+        document.querySelector('.categorias:first-of-type').appendChild(button.content.firstChild)
+
+      })
+      categorizadasExcluidas.forEach(([cat,newsArray]) => {
+        console.log(cat + ' ' + newsArray.length)
+
+        let button = document.createElement('template')
+        let content = `<button class="excluded">${cat} - ${newsArray.length}</button>`
+        button.innerHTML = content
+        document.querySelector('.categorias:last-of-type').appendChild(button.content.firstChild)
 
       })
 

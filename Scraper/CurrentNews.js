@@ -91,6 +91,10 @@ let uniqueNews;
       'Boa Viagem',
       'Viagem',
       'Rio Show',
+      'Música',
+      'Decoração',
+      'Como economizar',
+      'Gente',
     ];
 
     const filteredNews = uniqueNews.filter(
@@ -102,7 +106,25 @@ let uniqueNews;
     const excludedCount = uniqueNews.length - filteredNews.length;
     const newsCount = filteredNews.length;
 
-    const obj = { excludedCount, newsCount, data: filteredNews, excluded: excludedNews };
+    let categorizedNews = filteredNews.reduce((acc, obj) => {
+      !acc[obj.secao.nome] ? (acc[obj.secao.nome] = [obj]) : acc[obj.secao.nome].push(obj);
+      return acc;
+    }, {});
+
+    let categorizedExclusions = excludedNews.reduce((acc, obj) => {
+      !acc[obj.secao.nome] ? (acc[obj.secao.nome] = [obj]) : acc[obj.secao.nome].push(obj);
+      return acc;
+    }, {});
+
+    let categorized = { news: categorizedNews, exclusions: categorizedExclusions };
+
+    const obj = {
+      excludedCount,
+      newsCount,
+      data: filteredNews,
+      excluded: excludedNews,
+      categorized,
+    };
 
     //   let forPrint = uniqueNews
     //     .map((x, i) => {
