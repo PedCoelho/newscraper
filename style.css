@@ -270,8 +270,8 @@ input[type="search"] {
     justify-content: space-around;
     flex-direction: column;
   }
-  .search-container div:last-child {
-    margin-top: 1.5rem;
+  .search-container > div:last-of-type {
+    margin-top: 0.6rem;
     width: 100%;
   }
 
