@@ -2,25 +2,29 @@ Front-end:
     ☐ Botão específico dentro do card para o comando de copiar?
     ☐ Botão específico dentro do card para ir até a notíca
 
-        
-
 Tasks Done:
+  ----------------------------------FRONT-END--------------------------------------
+  ✔ Contabilizar número de notícias e número de notícias eliminadas @project(Front-end)
+  ✔ Apresentar categorias (excluídas ou exibidas) @project(Front-end)
   ✘ Copiar: título da notícia, subtítulo e link (texto formatado) @project(Front-end)
   ✔ Tornar o título clicável (quando clicasse nele, abriria a notícia) @project(Front-end)
   ✔ Links abrem em nova aba @project(Front-end)
   ✔ Diminuir ainda mais tamanho das imagens @project(Front-end)
+  
+  ----------------------------------BACK-END--------------------------------------
+  ✔ Organizar notícias obtidas por categorias @project(Back-end)
   ✔ Excluir logo as categorias listadas ali: @project(Back-end)
-  ✔ Esportes @project(Back-end)
-  ✔ Viagem @project(Back-end)
-  ✔ Boa Viagem @project(Back-end)
-  ✔ Bairros @project(Back-end)
-  ✔ Filmes @project(Back-end)
-  ✔ Rio Show @project(Back-end)
-  ✔ Gastronomia @project(Back-end)
-  ✔ Rio Gastronomia @project(Back-end)
-  ✔ Ela @project(Back-end)
-  ✔ TV @project(Back-end)
-  ✔ Cultura @project(Back-end)
-  ✔ "content.include.diversos" @project(Back-end)
-  ✔ "ComÃ©rcio em pauta @project(Back-end)
-  ✔ OpiniÃ£o @project(Back-end)
+      ✔ Esportes @project(Back-end)
+      ✔ Viagem @project(Back-end)
+      ✔ Boa Viagem @project(Back-end)
+      ✔ Bairros @project(Back-end)
+      ✔ Filmes @project(Back-end)
+      ✔ Rio Show @project(Back-end)
+      ✔ Gastronomia @project(Back-end)
+      ✔ Rio Gastronomia @project(Back-end)
+      ✔ Ela @project(Back-end)
+      ✔ TV @project(Back-end)
+      ✔ Cultura @project(Back-end)
+      ✔ "content.include.diversos" @project(Back-end)
+      ✔ "ComÃ©rcio em pauta @project(Back-end)
+      ✔ OpiniÃ£o @project(Back-end)

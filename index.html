@@ -19,10 +19,10 @@
   <div class="search-container">
     <div class="newsCounter">
       <h2 class="noticias"></h2>
-        <div class="categorias"></div>
+      <div class="categorias"></div>
       <h2 class="excluidas"></h2>
-        <div class="categorias"></div>
-        
+      <div class="categorias"></div>
+
     </div>
 
     <div>
@@ -32,6 +32,7 @@
   </div>
   <div class="icons">
     <button class="to-top"><i class="fa fa-arrow-up"></i></button>
+    <button hidden class="refresh"><i class="fa fa-refresh"></i></button>
     <div class="image-hider"><img src="./icon.png"></div>
   </div>
   <div id="messager">
@@ -65,62 +66,39 @@
       window.excluded = scraperData.excluded
 
       const noticiasCounter = $('.search-container h2.noticias')
-      noticiasCounter.text(`✅ Notícias Atuais: ${scraperData.newsCount}`)
+      noticiasCounter.text(`✅ Notícias Recentes: ${scraperData.newsCount}`)
       const excludedCounter = $('.search-container h2.excluidas')
       excludedCounter.text(`❌ Noticias Excluidas: ${scraperData.excludedCount}`);
-      setupClick([noticiasCounter,excludedCounter])
+      setupClick([noticiasCounter, excludedCounter])
 
-      function setupClick(titles){
-        titles.forEach( title => {
-          title.on('click',() => {title.next().toggleClass('expanded')})
+      function setupClick(titles) {
+        titles.forEach(title => {
+          title.on('click', () => { title.next().toggleClass('expanded') })
         })
       }
 
-      scraperData.data.forEach((x, i) => {
+      makeCards(scraperData.data)
 
-        let content = `<div class="title">
-                            <h1>${i+1}</h1>
-                            <p>Publicado em: ${new Date(x.publicadoEm).toLocaleString()}</p>
-                            </div>
-                          <div class="main-section">
-                            <div>
-                              <img src="${x.imagens.length > 0 ? x.imagens[0].url : 'noimage-found.png'}">
-                            </div>
-                            <div>
-                              <b>Categoria: ${x.secao.nome}</b><br>
-                              <h2><a class="link" target="_blank" href="${x.url}">${x.titulo}</a></h2>
-                              <h4>${x.subTitulo}</h4>
-                            </div>
-                          </div>
-                        `
-
-        let container = document.createElement('div')
-        container.classList.add('card')
-        container.innerHTML = content
-
-        document.body.appendChild(container)
-
-      })
-      window.categorizadasExcluidas =  Object.entries(scraperData.categorized.exclusions)
+      window.categorizadasExcluidas = Object.entries(scraperData.categorized.exclusions)
       window.categorizadas = Object.entries(scraperData.categorized.news)
-      
-      categorizadas.sort((a,b)=> a[1].length < b[1].length ? 1 : -1)
-      categorizadasExcluidas.sort((a,b)=> a[1].length < b[1].length ? 1 : -1)
 
-      categorizadas.forEach(([cat,newsArray]) => {
+      categorizadas.sort((a, b) => a[1].length < b[1].length ? 1 : -1)
+      categorizadasExcluidas.sort((a, b) => a[1].length < b[1].length ? 1 : -1)
+
+      categorizadas.forEach(([cat, newsArray]) => {
         console.log(cat + ' ' + newsArray.length)
 
         let button = document.createElement('template')
-        let content = `<button>${cat} - ${newsArray.length}</button>`
+        let content = `<button data-news="${cat}">${cat} - ${newsArray.length}</button>`
         button.innerHTML = content
         document.querySelector('.categorias:first-of-type').appendChild(button.content.firstChild)
 
       })
-      categorizadasExcluidas.forEach(([cat,newsArray]) => {
+      categorizadasExcluidas.forEach(([cat, newsArray]) => {
         console.log(cat + ' ' + newsArray.length)
 
         let button = document.createElement('template')
-        let content = `<button class="excluded">${cat} - ${newsArray.length}</button>`
+        let content = `<button data-news="${cat}" class="excluded">${cat} - ${newsArray.length}</button>`
         button.innerHTML = content
         document.querySelector('.categorias:last-of-type').appendChild(button.content.firstChild)
 
@@ -138,6 +116,13 @@
     $('.image-hider').click(toggleImages)
 
     $('.to-top').click(scrollUp)
+    $('.refresh').click(() => {
+      $('button').removeClass('active');
+      window.currentCategory = undefined
+      clearCards()
+      makeCards(window.data)
+      document.querySelector('button.refresh').setAttribute('hidden',true);
+    })
 
     function toggleImages() {
       let images = document.querySelectorAll('.main-section div:first-child')
@@ -266,16 +251,16 @@
       // const content = `<a href="${link}">${link}</a>`
       // copyToClip(content)
 
-    //   function copyToClip(str) {
-    //   function listener(e) {
-    //     e.clipboardData.setData("text/html", str);
-    //     e.clipboardData.setData("text/plain", str);
-    //     e.preventDefault();
-    //   }
-    //   document.addEventListener("copy", listener);
-    //   document.execCommand("copy");
-    //   document.removeEventListener("copy", listener);
-    // };
+      //   function copyToClip(str) {
+      //   function listener(e) {
+      //     e.clipboardData.setData("text/html", str);
+      //     e.clipboardData.setData("text/plain", str);
+      //     e.preventDefault();
+      //   }
+      //   document.addEventListener("copy", listener);
+      //   document.execCommand("copy");
+      //   document.removeEventListener("copy", listener);
+      // };
 
       const textArea = document.createElement("textarea");
       textArea.value = link;
@@ -292,7 +277,35 @@
       }
     }
 
- 
+    function makeCards(data) {
+      data.forEach((x, i) => {
+
+        let content = `<div class="title">
+                    <h1>${i + 1}</h1>
+                    <p>Publicado em: ${new Date(x.publicadoEm).toLocaleString()}</p>
+                    </div>
+                  <div class="main-section">
+                    <div>
+                      <img src="${x.imagens.length > 0 ? x.imagens[0].url : 'noimage-found.png'}">
+                    </div>
+                    <div>
+                      <b>Categoria: ${x.secao.nome}</b><br>
+                      <h2><a class="link" target="_blank" href="${x.url}">${x.titulo}</a></h2>
+                      <h4>${x.subTitulo}</h4>
+                    </div>
+                  </div>
+                `
+
+        let container = document.createElement('div')
+        container.classList.add('card')
+        container.innerHTML = content
+
+        document.body.appendChild(container)
+
+      })
+    }
+
+
   </script>
   <script>
     $(window).on('unload', function () {
@@ -304,7 +317,53 @@
       if (sessionStorage.scrollTop != "undefined") {
         $(window).scrollTop(sessionStorage.scrollTop, { behaviour: 'smooth' });
       }
+
+      document.querySelector('.newsCounter').addEventListener('click', (e) => {
+        const isButton = event.target.nodeName === 'BUTTON';
+        if (!isButton) {
+          return;
+        }
+
+        const button = event.target
+
+        loadCategoryNews(button, button.className)
+      })
     });
+
+    function loadCategoryNews(button, status = undefined) {
+
+      const category = button.dataset.news
+
+      if (window.currentCategory == category) {
+        button.classList.remove('active')
+        window.currentCategory = undefined
+        document.querySelector('button.refresh').toggleAttribute('hidden')
+
+        clearCards()
+        makeCards(window.data)
+        return;
+      }
+
+      // document.querySelectorAll('button').forEach( button => button.classList.remove('active'))
+      $('button').removeClass('active')
+
+      button.classList.add('active')
+
+      clearCards()
+
+      const data = (status == 'excluded' ? window.categorizadasExcluidas.filter(x => x.includes(category))[0][1] : window.categorizadas.filter(x => x.includes(category))[0][1])
+
+      makeCards(data)
+
+      window.currentCategory = category
+
+      document.querySelector('button.refresh').removeAttribute('hidden')
+
+    }
+
+    function clearCards() {
+      document.querySelectorAll('.card').forEach(card => card.remove())
+    }
 
   </script>
 </body>
