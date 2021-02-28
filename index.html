@@ -298,6 +298,7 @@
 
         let container = document.createElement('div')
         container.classList.add('card')
+        container.dataset.category = x.secao.nome
         container.innerHTML = content
 
         document.body.appendChild(container)
