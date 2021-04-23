@@ -1,7 +1,7 @@
 module.exports = function storeInBucket(fileName, data) {
-  // -------------------------------------------------------//
-  //  IF this is >= 1.0 the news is more than 24 hours old  //
-  // -------------------------------------------------------//
+  const AWS = require('aws-sdk');
+  AWS.config.loadFromPath('./config.json');
+
   // Amazon S3 bucket Identifier
   var bucketName = 'oglobo-scraper';
   // Create name for uploaded object key

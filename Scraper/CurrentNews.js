@@ -1,9 +1,8 @@
 const checkDateDifference = require('./DateDifference.js');
 const axios = require('axios');
 
-const AWS = require('aws-sdk');
 const storeInBucket = require('./StoreInBucket.js');
-AWS.config.loadFromPath('./config.json');
+const fetchG1Urls = require('./G1Scrape.js');
 
 let uniqueNews;
 
@@ -32,7 +31,7 @@ let uniqueNews;
     const params = new URLSearchParams({
       pagina: page,
     });
-    console.log(`Fetching results from page ${page}...`);
+    console.log(`Fetching results from OGlobo page ${page}...`);
 
     const result = await axios(requestUrl + params.toString()).then((data) => {
       // console.log(data.data);
@@ -101,10 +100,13 @@ let uniqueNews;
     const filteredNews = uniqueNews.filter(
       (el) => !filters.some((word) => el.secao.nome.toUpperCase() == word.toUpperCase())
     );
+
     const excludedNews = uniqueNews.filter((el) =>
       filters.some((word) => el.secao.nome.toUpperCase() == word.toUpperCase())
     );
+
     const excludedCount = uniqueNews.length - filteredNews.length;
+
     const newsCount = filteredNews.length;
 
     let categorizedNews = filteredNews.reduce((acc, obj) => {
@@ -161,5 +163,21 @@ let uniqueNews;
     //     `${new Date().toLocaleString()} - SERVER ERROR: GIT Operations Failed\n`
     //   );
     // }
+  }
+
+  var g1 = await fetchG1Urls().catch(async (e) => {
+    console.error(`\nERROR: ${e.message}\n\nREQUEST_URL: ${requestUrl}\n`);
+    (async () => {
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      await delay(10000);
+      attempt = attempt + 1;
+
+      scrape(attempt, maxAttempts);
+    })();
+  });
+
+  if (g1) {
+    storeInBucket('g1_scrape.json', g1);
   }
 })(1, 5);
