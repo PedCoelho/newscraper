@@ -5,10 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Noticias JORNAL OGLOBO - 24h</title>
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="loader.css">
   <link rel="shortcut icon" href="favicon.ico" />
-  <link href="./css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale-subtle.css" />
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -17,271 +17,315 @@
 </head>
 
 <body>
-  <div class="search-container">
-    <div class="newsCounter">
-      <h2 class="noticias"></h2>
-      <div class="categorias"></div>
-      <h2 class="excluidas"></h2>
-      <div class="categorias"></div>
+  <div class="wrapper">
+    <ul class="nav nav-tabs" id="canais" role="tablist">
+      <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="oglobo-tab" data-bs-toggle="tab" data-bs-target="#oglobo" role="tab" href="#"
+          aria-controls="oglobo" aria-selected="true">OGlobo</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="g1-tab" data-bs-toggle="tab" data-bs-target="#g1" href="#" role="tab" aria-controls="g1"
+          aria-selected="false">G1(Regiões)</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="canaisContent">
+      <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="oglobo-tab" id="oglobo">
+        <div class="search-container">
+          <div class="newsCounter">
+            <h2 class="noticias"></h2>
+            <div class="categorias"></div>
+            <h2 class="excluidas"></h2>
+            <div class="categorias"></div>
+          </div>
 
+          <div>
+            <input id="searchbar" type="search" placeholder="Busca">
+            <button class="search-btn"><i class="fa fa-search"></i></button>
+          </div>
+        </div>
+        <div id="news-container"></div>
+      </div>
+      <div class="tab-pane fade" role="tabpanel" aria-labelledby="g1-tab" id="g1">
+        <div class="container-fluid">
+
+          <p class="my-3">Nothing here yet...</p>
+          <div class="mb-3 d-flex align-items-center">
+            <strong>Loading News...</strong>
+            <!-- <span class="spinner-border spinner-border-sm ms-2 mb-2 " style="text-align:center" role="status"
+              aria-hidden="true">
+            </span> -->
+          </div>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+              aria-valuemax="100">25%
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="icons">
+      <button class="to-top"><i class="fa fa-arrow-up"></i></button>
+      <button hidden class="refresh"><i class="fa fa-refresh"></i></button>
+      <div class="image-hider"><img src="./icon.png"></div>
+    </div>
+    <div id="messager">
+      <h1>Oops! 😢</h1><br />
+      <h2 style="margin: unset;">Essa busca não retornou nenhum resultado.</h2>
+    </div>
+    <div class="lds-roller">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
 
-    <div>
-      <input id="searchbar" type="search" placeholder="Busca">
-      <button class="search-btn"><i class="fa fa-search"></i></button>
-    </div>
-  </div>
-  <div class="icons">
-    <button class="to-top"><i class="fa fa-arrow-up"></i></button>
-    <button hidden class="refresh"><i class="fa fa-refresh"></i></button>
-    <div class="image-hider"><img src="./icon.png"></div>
-  </div>
-  <div id="messager">
-    <h1>Oops! 😢</h1><br />
-    <h2 style="margin: unset;">Essa busca não retornou nenhum resultado.</h2>
-  </div>
-  <div class="lds-roller">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script>
+      (async () => {
+        const scraperData = await fetch('https://oglobo-scraper.s3-sa-east-1.amazonaws.com/latest.json').then(x => {
+          document.querySelector('.lds-roller').toggleAttribute('hidden')
+          return x.json()
+        })
 
-  <script src="https://unpkg.com/@popperjs/core@2"></script>
-  <script src="https://unpkg.com/tippy.js@6"></script>
-  <script>
+        console.log(
+          `\n✅ Notícias Atuais: ${scraperData.newsCount}\n\n❌ Noticias Excluidas: ${scraperData.excludedCount}\n\n`
+        )
 
-    (async () => {
-      const scraperData = await fetch('https://oglobo-scraper.s3-sa-east-1.amazonaws.com/latest.json').then(x => {
-        document.querySelector('.lds-roller').toggleAttribute('hidden')
-        return x.json()
+        window.data = scraperData.data
+        window.excluded = scraperData.excluded
+
+        const noticiasCounter = $('.search-container h2.noticias')
+        noticiasCounter.text(`✅ Notícias Recentes: ${scraperData.newsCount}`)
+        const excludedCounter = $('.search-container h2.excluidas')
+        excludedCounter.text(`❌ Noticias Excluidas: ${scraperData.excludedCount}`);
+        setupClick([noticiasCounter, excludedCounter])
+
+        function setupClick(titles) {
+          titles.forEach(title => {
+            title.on('click', () => {
+              title.next().toggleClass('expanded')
+            })
+          })
+        }
+
+        makeCards(scraperData.data)
+
+        window.categorizadasExcluidas = Object.entries(scraperData.categorized.exclusions)
+        window.categorizadas = Object.entries(scraperData.categorized.news)
+
+        categorizadas.sort((a, b) => a[1].length < b[1].length ? 1 : -1)
+        categorizadasExcluidas.sort((a, b) => a[1].length < b[1].length ? 1 : -1)
+
+        categorizadas.forEach(([cat, newsArray]) => {
+          console.log(cat + ' ' + newsArray.length)
+
+          let button = document.createElement('template')
+          let content = `<button data-news="${cat}">${cat} - ${newsArray.length}</button>`
+          button.innerHTML = content
+          document.querySelector('.categorias:first-of-type').appendChild(button.content.firstChild)
+
+        })
+        categorizadasExcluidas.forEach(([cat, newsArray]) => {
+          console.log(cat + ' ' + newsArray.length)
+
+          let button = document.createElement('template')
+          let content = `<button data-news="${cat}" class="excluded">${cat} - ${newsArray.length}</button>`
+          button.innerHTML = content
+          document.querySelector('.categorias:last-of-type').appendChild(button.content.firstChild)
+
+        })
+
+        if (sessionStorage.latestNews && data[0].titulo != sessionStorage.latestNews) {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          })
+        } else if (sessionStorage.scrollTop != "undefined") {
+          window.scrollTo({
+            top: sessionStorage.scrollTop
+          });
+        }
+
+      })()
+    </script>
+    <script>
+      $('.image-hider').click(toggleImages)
+
+      $('.to-top').click(scrollUp)
+      $('.refresh').click(() => {
+        $('button').removeClass('active');
+        window.currentCategory = undefined
+        clearCards()
+        makeCards(window.data)
+        document.querySelector('button.refresh').setAttribute('hidden', true);
       })
 
-      console.log(`\n✅ Notícias Atuais: ${scraperData.newsCount}\n\n❌ Noticias Excluidas: ${scraperData.excludedCount}\n\n`)
+      function toggleImages() {
+        let images = document.querySelectorAll('.main-section div:first-child')
+        images.forEach((div) => {
+          div.toggleAttribute('hidden')
+          div.style.flex = '0 0 0 100%'
+        })
 
-      window.data = scraperData.data
-      window.excluded = scraperData.excluded
+        let otherDiv = document.querySelectorAll('.main-section div:last-child')
+        otherDiv.forEach((div) => div.classList.toggle('full-flex'))
+      }
 
-      const noticiasCounter = $('.search-container h2.noticias')
-      noticiasCounter.text(`✅ Notícias Recentes: ${scraperData.newsCount}`)
-      const excludedCounter = $('.search-container h2.excluidas')
-      excludedCounter.text(`❌ Noticias Excluidas: ${scraperData.excludedCount}`);
-      setupClick([noticiasCounter, excludedCounter])
-
-      function setupClick(titles) {
-        titles.forEach(title => {
-          title.on('click', () => { title.next().toggleClass('expanded') })
+      function scrollUp() {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
         })
       }
+    </script>
+    <script>
+      $.expr[":"].CIcontains = $.expr.createPseudo(function (arg) {
 
-      makeCards(scraperData.data)
-
-      window.categorizadasExcluidas = Object.entries(scraperData.categorized.exclusions)
-      window.categorizadas = Object.entries(scraperData.categorized.news)
-
-      categorizadas.sort((a, b) => a[1].length < b[1].length ? 1 : -1)
-      categorizadasExcluidas.sort((a, b) => a[1].length < b[1].length ? 1 : -1)
-
-      categorizadas.forEach(([cat, newsArray]) => {
-        console.log(cat + ' ' + newsArray.length)
-
-        let button = document.createElement('template')
-        let content = `<button data-news="${cat}">${cat} - ${newsArray.length}</button>`
-        button.innerHTML = content
-        document.querySelector('.categorias:first-of-type').appendChild(button.content.firstChild)
-
-      })
-      categorizadasExcluidas.forEach(([cat, newsArray]) => {
-        console.log(cat + ' ' + newsArray.length)
-
-        let button = document.createElement('template')
-        let content = `<button data-news="${cat}" class="excluded">${cat} - ${newsArray.length}</button>`
-        button.innerHTML = content
-        document.querySelector('.categorias:last-of-type').appendChild(button.content.firstChild)
-
-      })
-
-      if (sessionStorage.latestNews && data[0].titulo != sessionStorage.latestNews) {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      } else if (sessionStorage.scrollTop != "undefined") {
-        window.scrollTo({ top: sessionStorage.scrollTop });
-      }
-
-    })()
-  </script>
-  <script>
-    $('.image-hider').click(toggleImages)
-
-    $('.to-top').click(scrollUp)
-    $('.refresh').click(() => {
-      $('button').removeClass('active');
-      window.currentCategory = undefined
-      clearCards()
-      makeCards(window.data)
-      document.querySelector('button.refresh').setAttribute('hidden',true);
-    })
-
-    function toggleImages() {
-      let images = document.querySelectorAll('.main-section div:first-child')
-      images.forEach((div) => {
-        div.toggleAttribute('hidden')
-        div.style.flex = '0 0 0 100%'
-      })
-
-      let otherDiv = document.querySelectorAll('.main-section div:last-child')
-      otherDiv.forEach((div) => div.classList.toggle('full-flex'))
-    }
-
-    function scrollUp() {
-      window.scrollTo({ top: 0, behavior: "smooth" })
-    }
-  </script>
-  <script>
-
-
-    $.expr[":"].CIcontains = $.expr.createPseudo(function (arg) {
-
-      if (arg.split(',').filter(Boolean).length > 1) {
-        return function (elem) {
-          let text = $(elem).text().toUpperCase()
-          return arg.split(',').some(x => text.includes(x.toUpperCase()));
-        };
-      } else {
-        return function (elem) {
-          return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-        };
-      }
-
-    });
-
-    $('.search-btn').click(search)
-
-    $('input[type=search]').on('search', search);
-
-    function search() {
-
-      let searchbar = $('input[type=search]')
-      searchbar.blur()
-      // get the text from the box
-      let curr_text = searchbar.val();
-      // pass it to the function
-      if (curr_text == '') {
-        $(".card").show();
-        $(".card").removeHighlight();
-        $('#messager').hide()
-        return null
-      }
-      filterResults(curr_text);
-    }
-
-    function filterResults(curr_text) {
-
-      // hide all results
-      $('#messager').hide()
-      $(".card").hide();
-      $(".card").removeHighlight();
-
-      let array = curr_text.split(',')
-      // ... except those which are selected
-      jQuery.each(array, function (idx, val) {
-        // console.log(val)
-        val = val.trim()
-
-        if (val == 'undefined' || val == '' || val.includes(' ')) {
-          alert('Preencha corretamente a busca, seguindo o padrão:\npalavra1,palavra2,palavra3(etc)\n(sem espaços em branco, ou vírgulas solitárias)')
+        if (arg.split(',').filter(Boolean).length > 1) {
+          return function (elem) {
+            let text = $(elem).text().toUpperCase()
+            return arg.split(',').some(x => text.includes(x.toUpperCase()));
+          };
+        } else {
+          return function (elem) {
+            return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+          };
         }
 
-        $(`.card:CIcontains(${val})`).show();
-        $(`.card:CIcontains(${val})`).highlight(val);
-      })
-
-      !$('.card').is(':visible') ? $('#messager').fadeIn(200) : null
-
-      // ... except those which are selected
-      // $(".card:CIcontains('" + curr_text + "')").show();
-      // $(".card:CIcontains('" + curr_text + "')").highlight(curr_text);
-
-
-    }
-  </script>
-  <script>
-    $('body').on('click', '.card', copyURL)
-
-    var tippyInstance
-
-    window.addEventListener('DOMContentLoaded', tippyInstance = setupTippyInstance())
-
-    function setupTippyInstance() {
-      console.log('tippy setup')
-      tippy.setDefaultProps({
-        animation: 'scale-subtle',
-        duration: 150,
-        content: 'Link Copiado!',
-        hideOnClick: false,
-        touch: false,
-        onShow(instance) {
-          setTimeout(() => {
-            instance.hide();
-            instance.disable();
-          }, 800);
-        }
       });
 
-      var init = tippy(document.body, {
-        trigger: 'click',
-        showOnCreate: true,
-        followCursor: 'true',
-      })
+      $('.search-btn').click(search)
 
-      init.hide()
-      init.disable()
+      $('input[type=search]').on('search', search);
 
-      return init
-    }
+      function search() {
 
-    function copyURL() {
-
-      const link = $(this).find('a').attr('href')
-      // const title = $(this).find('h2').text()
-      // const subtitle = $(this).find('h4').text()
-
-      // const content = `<a href="${link}">${link}</a>`
-      // copyToClip(content)
-
-      //   function copyToClip(str) {
-      //   function listener(e) {
-      //     e.clipboardData.setData("text/html", str);
-      //     e.clipboardData.setData("text/plain", str);
-      //     e.preventDefault();
-      //   }
-      //   document.addEventListener("copy", listener);
-      //   document.execCommand("copy");
-      //   document.removeEventListener("copy", listener);
-      // };
-
-      const textArea = document.createElement("textarea");
-      textArea.value = link;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand("Copy");
-      textArea.remove();
-
-
-
-      if (!tippyInstance.state.isEnabled) {
-        tippyInstance.enable()
-        tippyInstance.show()
+        let searchbar = $('input[type=search]')
+        searchbar.blur()
+        // get the text from the box
+        let curr_text = searchbar.val();
+        // pass it to the function
+        if (curr_text == '') {
+          $(".card").show();
+          $(".card").removeHighlight();
+          $('#messager').hide()
+          return null
+        }
+        filterResults(curr_text);
       }
-    }
 
-    function makeCards(data) {
-      data.forEach((x, i) => {
+      function filterResults(curr_text) {
 
-        let content = `<div class="title">
+        // hide all results
+        $('#messager').hide()
+        $(".card").hide();
+        $(".card").removeHighlight();
+
+        let array = curr_text.split(',')
+        // ... except those which are selected
+        jQuery.each(array, function (idx, val) {
+            // console.log(val)
+            val = val.trim()
+
+            if (val == 'undefined' || val == '' || val.includes(' ')) {
+              alert(
+                'Preencha corretamente a busca, seguindo o padrão:\npalavra1,palavra2,palavra3(etc)\n(sem espaços em branco, ou vírgulas solitárias)'
+              )
+            }
+
+            $(`.card:CIcontains(${val})`).show();
+            $(`.card:CIcontains(${val})`).highlight(val);
+          })
+
+          !$('.card').is(':visible') ? $('#messager').fadeIn(200) : null
+
+        // ... except those which are selected
+        // $(".card:CIcontains('" + curr_text + "')").show();
+        // $(".card:CIcontains('" + curr_text + "')").highlight(curr_text);
+
+
+      }
+    </script>
+    <script>
+      $('body').on('click', '.card', copyURL)
+
+      var tippyInstance
+
+      window.addEventListener('DOMContentLoaded', tippyInstance = setupTippyInstance())
+
+      function setupTippyInstance() {
+        console.log('tippy setup')
+        tippy.setDefaultProps({
+          animation: 'scale-subtle',
+          duration: 150,
+          content: 'Link Copiado!',
+          hideOnClick: false,
+          touch: false,
+          onShow(instance) {
+            setTimeout(() => {
+              instance.hide();
+              instance.disable();
+            }, 800);
+          }
+        });
+
+        var init = tippy(document.body, {
+          trigger: 'click',
+          showOnCreate: true,
+          followCursor: 'true',
+        })
+
+        init.hide()
+        init.disable()
+
+        return init
+      }
+
+      function copyURL() {
+
+        const link = $(this).find('a').attr('href')
+        // const title = $(this).find('h2').text()
+        // const subtitle = $(this).find('h4').text()
+
+        // const content = `<a href="${link}">${link}</a>`
+        // copyToClip(content)
+
+        //   function copyToClip(str) {
+        //   function listener(e) {
+        //     e.clipboardData.setData("text/html", str);
+        //     e.clipboardData.setData("text/plain", str);
+        //     e.preventDefault();
+        //   }
+        //   document.addEventListener("copy", listener);
+        //   document.execCommand("copy");
+        //   document.removeEventListener("copy", listener);
+        // };
+
+        const textArea = document.createElement("textarea");
+        textArea.value = link;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("Copy");
+        textArea.remove();
+
+
+
+        if (!tippyInstance.state.isEnabled) {
+          tippyInstance.enable()
+          tippyInstance.show()
+        }
+      }
+
+      function makeCards(data) {
+        data.forEach((x, i) => {
+
+          let content = `<div class="title">
                     <h1>${i + 1}</h1>
                     <p>Publicado em: ${new Date(x.publicadoEm).toLocaleString()}</p>
                     </div>
@@ -297,78 +341,78 @@
                   </div>
                 `
 
-        let container = document.createElement('div')
-        container.classList.add('card')
-        container.dataset.category = x.secao.nome
-        container.innerHTML = content
+          let container = document.createElement('div')
+          container.classList.add('card')
+          container.dataset.category = x.secao.nome
+          container.innerHTML = content
 
-        document.body.appendChild(container)
+          document.getElementById('news-container').appendChild(container)
 
-      })
-    }
-
-
-  </script>
-  <script>
-    $(window).on('unload', function () {
-      sessionStorage.scrollTop = $(this).scrollTop();
-      sessionStorage.latestNews = this.data[0].titulo
-    });
-
-    $(document).ready(function () {
-      if (sessionStorage.scrollTop != "undefined") {
-        $(window).scrollTop(sessionStorage.scrollTop, { behaviour: 'smooth' });
+        })
       }
+    </script>
+    <script>
+      $(window).on('unload', function () {
+        sessionStorage.scrollTop = $(this).scrollTop();
+        sessionStorage.latestNews = this.data[0].titulo
+      });
 
-      document.querySelector('.newsCounter').addEventListener('click', (e) => {
-        const isButton = event.target.nodeName === 'BUTTON';
-        if (!isButton) {
+      $(document).ready(function () {
+        if (sessionStorage.scrollTop != "undefined") {
+          $(window).scrollTop(sessionStorage.scrollTop, {
+            behaviour: 'smooth'
+          });
+        }
+
+        document.querySelector('.newsCounter').addEventListener('click', (e) => {
+          const isButton = event.target.nodeName === 'BUTTON';
+          if (!isButton) {
+            return;
+          }
+
+          const button = event.target
+
+          loadCategoryNews(button, button.className)
+        })
+      });
+
+      function loadCategoryNews(button, status = undefined) {
+
+        const category = button.dataset.news
+
+        if (window.currentCategory == category) {
+          button.classList.remove('active')
+          window.currentCategory = undefined
+          document.querySelector('button.refresh').toggleAttribute('hidden')
+
+          clearCards()
+          makeCards(window.data)
           return;
         }
 
-        const button = event.target
+        // document.querySelectorAll('button').forEach( button => button.classList.remove('active'))
+        $('button').removeClass('active')
 
-        loadCategoryNews(button, button.className)
-      })
-    });
-
-    function loadCategoryNews(button, status = undefined) {
-
-      const category = button.dataset.news
-
-      if (window.currentCategory == category) {
-        button.classList.remove('active')
-        window.currentCategory = undefined
-        document.querySelector('button.refresh').toggleAttribute('hidden')
+        button.classList.add('active')
 
         clearCards()
-        makeCards(window.data)
-        return;
+
+        const data = (status == 'excluded' ? window.categorizadasExcluidas.filter(x => x.includes(category))[0][1] :
+          window.categorizadas.filter(x => x.includes(category))[0][1])
+
+        makeCards(data)
+
+        window.currentCategory = category
+
+        document.querySelector('button.refresh').removeAttribute('hidden')
+
       }
 
-      // document.querySelectorAll('button').forEach( button => button.classList.remove('active'))
-      $('button').removeClass('active')
-
-      button.classList.add('active')
-
-      clearCards()
-
-      const data = (status == 'excluded' ? window.categorizadasExcluidas.filter(x => x.includes(category))[0][1] : window.categorizadas.filter(x => x.includes(category))[0][1])
-
-      makeCards(data)
-
-      window.currentCategory = category
-
-      document.querySelector('button.refresh').removeAttribute('hidden')
-
-    }
-
-    function clearCards() {
-      document.querySelectorAll('.card').forEach(card => card.remove())
-    }
-
-  </script>
-  <script src="./js/bootstrap.bundle.min.js"></script>
+      function clearCards() {
+        document.querySelectorAll('.card').forEach(card => card.remove())
+      }
+    </script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
 
 </body>
 
