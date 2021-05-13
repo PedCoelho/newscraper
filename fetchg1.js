@@ -1,4 +1,9 @@
-async function fetchG1(path, loader_selector) {
+async function fetchG1(
+  path = "https://oglobo-scraper.s3-sa-east-1.amazonaws.com/g1_scrape.json",
+  loader_selector = ".progress-bar"
+) {
+  //ex: data = await fetchG1('https://oglobo-scraper.s3-sa-east-1.amazonaws.com/g1_scrape.json','.progress-bar')
+
   let loader = document.querySelector(loader_selector);
 
   let req = await fetch(path);

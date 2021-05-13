@@ -166,15 +166,17 @@ div.image-hider img {
 }
 
 #messager {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  text-align: center;
-  width: max-content;
-  max-width: 80vw;
-  display: none;
-  transform: translate(-50%, -50%);
+  display: flex;
   color: white;
+  flex-flow: column;
+  justify-content: center;
+  text-align: center;
+  margin: 2rem;
+}
+
+#messager>* {
+  margin: auto;
+
 }
 
 /* Searchbar */
